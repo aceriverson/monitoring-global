@@ -31,6 +31,8 @@ spec:
         - --initial-query-delay=5s
         - --threshold=0.90
         - --tls-ca-file=/mnt/tls/ca.pem
+        - --tls-client-cert-file=/mnt/tls/client-cert.pem
+        - --tls-client-private-key-file=/mnt/tls/client-key.pem
         - --token-file=/var/shared/token
         image: quay.io/observatorium/up:master-2020-11-04-0c6ece8
         name: observatorium-up

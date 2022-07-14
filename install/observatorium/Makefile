@@ -25,6 +25,12 @@ export DEX_TENANT_CLIENT_SECRET?="blah"
 endif
 
 
+# List all environment variables for debugging purposes
+.PHONY: env
+env:
+	$(foreach var,$(.VARIABLES),$(info $(var) = $($(var))))
+
+
 # Deploy dex IDP based on environment type
 .PHONY: create/dex
 create/dex:
@@ -35,7 +41,6 @@ endif
 
 #Deploy Dex for Dev environment uzing kustomize. 
 .PHONY: create/dex/dev
-create/dex/dev: create/certs/dev
 	@echo "Create dex in: $(DEX_NAMESPACE) for Dev environment"
 	@echo "$(DEX_TOKEN_URL)"
 	@cp config/certs/tls.generated.crt config/certs/tls.generated.key config/certs/rootCA.generated.crt config/dex/dev
@@ -57,8 +62,15 @@ create/certs/dev:
 	@openssl x509  -req -in config/certs/tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -CAcreateserial -out config/certs/tls.generated.crt -days 730 -sha256 -extfile config/certs/cert_req.generated.conf -extensions v3_req
 	@openssl x509 -in config/certs/tls.generated.crt -text -noout
 
-# Deploy MINIO to different environments
+.PHONY: create/certs/mTLS/dev
+create/certs/mTLS/dev: create/certs/dev
+	@openssl genrsa -out config/certs/client-tls.generated.key 2048
+	@openssl req -new -key rsa:2048 -key config/certs/client-tls.generated.key -out config/certs/client-tls.generated.csr -config config/certs/cert_req.generated.conf -reqexts 'v3_req'
+	@openssl req -in config/certs/client-tls.generated.csr -text -noout
+	@openssl x509 -req -in config/certs/client-tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -CAcreateserial -out config/certs/client-tls.generated.crt -days 730 -sha256 -extfile config/certs/cert_req.generated.conf -extensions v3_req
+	@openssl x509 -in config/certs/client-tls.generated.crt -text -noout
 
+# Deploy MINIO to different environments
 .PHONY: create/minio
 create/minio:
 ifeq ($(observatorium_env),dev)
@@ -108,6 +120,13 @@ create/observatorium/dev:
 	cat config/observatorium/dev/thanos.yaml  > config/observatorium/dev/thanos.generated.yaml
 	oc kustomize config/observatorium/dev |sed 's/<dex_issuer_url>/$(DEX_TOKEN_URL)/g;s/<namespace>/$(OBSERVATORIUM_NAMESPACE)/g;s/<hosturl>/$(OBSERVATORIUM_ROUTE_HOST)/g' |oc apply -f -
 
+.PHONEY: create/observatorium/mTLS/dev
+create/observatorium/mTLS/dev:
+	@echo "create observatorium in: $(OBSERVATORIUM_NAMESPACE) for Dev Environment"
+	@cp config/certs/tls.generated.crt config/certs/tls.generated.key config/certs/rootCA.generated.crt config/certs/client-tls.generated.crt config/certs/client-tls.generated.key config/observatorium/dev
+	cat config/observatorium/dev/thanos.yaml  > config/observatorium/dev/thanos.generated.yaml
+	oc kustomize config/observatorium/dev |sed 's/<dex_issuer_url>/$(DEX_TOKEN_URL)/g;s/<namespace>/$(OBSERVATORIUM_NAMESPACE)/g;s/<hosturl>/$(OBSERVATORIUM_ROUTE_HOST)/g' |oc apply -f -
+
 .PHONY: create/observatorium-up
 create/observatorium-up:
 	@echo "create observatorium-up job in: $(OBSERVATORIUM_NAMESPACE) for Dev Environment"
@@ -150,5 +169,10 @@ clean:
 #	@find ./config -type f -name "*.generated.*" -exec rm {} \;
 
 
-all: create/dex create/minio create/crds create/operator create/observatorium
+all: create/certs/dev create/dex create/minio create/crds create/operator create/observatorium
 	@echo "Done installing observatorium"
+
+
+.PHONEY: all/mtls
+all/mtls: create/certs/mTLS/dev create/dex create/minio create/crds create/operator create/observatorium/mTLS/dev
+	@echo "Done installing observatorium with mTLS"

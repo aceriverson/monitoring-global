@@ -104,14 +104,19 @@ spec:
             - test
     replicas: 1
     tenants:
+      # - id: 1610b0c3-c509-4592-a256-a1871353dbfa
+      #   name: test
+      #   oidc:
+      #     clientID: test
+      #     clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
+      #     issuerCAPath: /var/run/tls/ca.pem
+      #     issuerURL: 'https://<dex_issuer_url>/dex'
+      #     usernameClaim: email
       - id: 1610b0c3-c509-4592-a256-a1871353dbfa
         name: test
-        oidc:
-          clientID: test
-          clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
-          issuerCAPath: /var/run/tls/ca.pem
-          issuerURL: 'https://<dex_issuer_url>/dex'
-          usernameClaim: email
+        mTLS:
+          caKey: ca.pem
+          configMapName: observatorium-xyz-mtls
     tls:
       caKey: ca.pem
       certKey: cert.pem
