@@ -63,11 +63,11 @@ create/certs/dev:
 	@openssl x509 -in config/certs/tls.generated.crt -text -noout
 
 .PHONY: create/certs/mTLS/dev
-create/certs/mTLS/dev: create/certs/dev
+create/certs/mTLS/dev:
 	@openssl genrsa -out config/certs/client-tls.generated.key 2048
-	@openssl req -new -key rsa:2048 -key config/certs/client-tls.generated.key -out config/certs/client-tls.generated.csr -config config/certs/cert_req.generated.conf -reqexts 'v3_req'
+	@openssl req -new -key rsa:2048 -key config/certs/client-tls.generated.key -out config/certs/client-tls.generated.csr -config config/certs/mtls_cert_req.conf -reqexts 'v3_req'
 	@openssl req -in config/certs/client-tls.generated.csr -text -noout
-	@openssl x509 -req -in config/certs/client-tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -CAcreateserial -out config/certs/client-tls.generated.crt -days 730 -sha256 -extfile config/certs/cert_req.generated.conf -extensions v3_req
+	@openssl x509 -req -in config/certs/client-tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -CAcreateserial -out config/certs/client-tls.generated.crt -days 730 -sha256 -extfile config/certs/mtls_cert_req.conf -extensions v3_req
 	@openssl x509 -in config/certs/client-tls.generated.crt -text -noout
 
 # Deploy MINIO to different environments
@@ -120,7 +120,7 @@ create/observatorium/dev:
 	cat config/observatorium/dev/thanos.yaml  > config/observatorium/dev/thanos.generated.yaml
 	oc kustomize config/observatorium/dev |sed 's/<dex_issuer_url>/$(DEX_TOKEN_URL)/g;s/<namespace>/$(OBSERVATORIUM_NAMESPACE)/g;s/<hosturl>/$(OBSERVATORIUM_ROUTE_HOST)/g' |oc apply -f -
 
-.PHONEY: create/observatorium/mTLS/dev
+.PHONY: create/observatorium/mTLS/dev
 create/observatorium/mTLS/dev:
 	@echo "create observatorium in: $(OBSERVATORIUM_NAMESPACE) for Dev Environment"
 	@cp config/certs/tls.generated.crt config/certs/tls.generated.key config/certs/rootCA.generated.crt config/certs/client-tls.generated.crt config/certs/client-tls.generated.key config/observatorium/dev
@@ -136,6 +136,17 @@ create/observatorium-up:
 delete/observatorium-up:
 	@echo "Delete observatorium-up job in: $(OBSERVATORIUM_NAMESPACE) for Dev Environment"
 	oc delete job observatorium-up-metrics-tls -n $(OBSERVATORIUM_NAMESPACE)
+
+.PHONY: create/observatorium-up/mtls
+create/observatorium-up/mtls: create/certs/mTLS/dev
+	@echo "create observatorium-up mTLS job in: $(OBSERVATORIUM_NAMESPACE) for Dev Environment"
+	oc kustomize config/observatorium-up/mtls |sed 's/<namespace>/$(OBSERVATORIUM_NAMESPACE)/g' |oc apply -f -
+
+.PHONY: delete/observatorium-up/mtls
+delete/observatorium-up/mtls:
+	@echo "Delete observatorium-up mTLS job in: $(OBSERVATORIUM_NAMESPACE) for Dev Environment"
+	oc delete job observatorium-up-metrics-mtls -n $(OBSERVATORIUM_NAMESPACE)
+
 
 .PHONY: create/cr
 create/cr:
@@ -174,5 +185,5 @@ all: create/certs/dev create/dex create/minio create/crds create/operator create
 
 
 .PHONEY: all/mtls
-all/mtls: create/certs/mTLS/dev create/dex create/minio create/crds create/operator create/observatorium/mTLS/dev
+all/mtls: create/certs/dev create/certs/mTLS/dev create/dex create/minio create/crds create/operator create/observatorium/mTLS/dev
 	@echo "Done installing observatorium with mTLS"

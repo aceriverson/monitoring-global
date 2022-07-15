@@ -19,8 +19,8 @@ configMapGenerator:
   namespace: <namespace>
   files:
   - ca.pem=rootCA.generated.crt
-  - client-cert.pem=client-tls.generated.crt
-  - client-key.pem=client-tls.generated.key
+  - client-cert.crt=client-tls.generated.crt
+  - client-key.key=client-tls.generated.key
 - name: observatorium-xyz-mtls
   namespace: <namespace>
   files:
