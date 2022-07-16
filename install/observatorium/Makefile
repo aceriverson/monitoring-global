@@ -185,5 +185,5 @@ all: create/certs/dev create/dex create/minio create/crds create/operator create
 
 
 .PHONEY: all/mtls
-all/mtls: create/certs/dev create/certs/mTLS/dev create/dex create/minio create/crds create/operator create/observatorium/mTLS/dev
+all/mtls: create/certs/dev create/certs/mTLS/dev create/minio create/crds create/operator create/observatorium/mTLS/dev
 	@echo "Done installing observatorium with mTLS"
