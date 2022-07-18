@@ -187,3 +187,9 @@ all: create/certs/dev create/dex create/minio create/crds create/operator create
 .PHONEY: all/mtls
 all/mtls: create/certs/dev create/certs/mTLS/dev create/minio create/crds create/operator create/observatorium/mTLS/dev
 	@echo "Done installing observatorium with mTLS"
+
+.PHONEY: clean/mtls
+clean/mtls: 
+	@oc delete namespace $(MINIO_NAMESPACE)
+	@oc delete namespace $(OBSERVATORIUM_NAMESPACE)
+	@echo "Done uninstalling observatorium mTLS"
