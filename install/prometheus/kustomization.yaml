@@ -1,6 +1,6 @@
 # Create a kustomization.yaml file with ConfigMapGenerator
 resources:
-- basic_pod.yaml
+- prom-pod.yaml
 configMapGenerator:
 - name: prom-mtls
   namespace: monitoring
