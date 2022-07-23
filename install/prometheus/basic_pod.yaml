@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example
+spec:
+  containers:
+  - name: example
+    args:
+      - --config.file=/etc/prometheus/prometheus.yaml
+    image: quay.io/prometheus/prometheus
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: prom-mtls
+      mountPath: /etc/prometheus/certs
+    - name: prom-config
+      mountPath: /etc/prometheus
+  volumes:
+    - name: prom-mtls
+      configMap:
+        name: prom-mtls
+    - name: prom-config
+      configMap:
+        name: prom-config

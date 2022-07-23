@@ -1,0 +1,16 @@
+# Create a kustomization.yaml file with ConfigMapGenerator
+resources:
+- basic_pod.yaml
+configMapGenerator:
+- name: prom-mtls
+  namespace: monitoring
+  files:
+  - rootCA.pem=rootCA.generated.crt
+  - client.pem=client-tls.generated.crt
+  - client.key=client-tls.generated.key
+- name: prom-config
+  namespace: monitoring
+  files:
+  - prometheus.yaml=prometheus.yaml
+generatorOptions:
+  disableNameSuffixHash: true
