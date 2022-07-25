@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: example
+  name: prometheus-mtls
 spec:
   containers:
-  - name: example
+  - name: prometheus-mtls
     args:
       - --config.file=/etc/prometheus/prometheus.yaml
     image: quay.io/prometheus/prometheus
