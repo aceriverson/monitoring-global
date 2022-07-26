@@ -8,5 +8,5 @@ install/observatorium/config/*/**/*.generated.key
 install/observatorium/config/*/**/*.generated.conf
 install/observatorium/config/*/**/*.generated.srl
 install/observatorium/config/certs/rootCA.srl
-install/prometheus/*.generated.crt
-install/prometheus/*.generated.key
+install/mtls/certs/*.generated.crt
+install/mtls/certs/*.generated.key
