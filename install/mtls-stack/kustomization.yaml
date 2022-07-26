@@ -19,14 +19,15 @@ configMapGenerator:
 - name: tenants
   namespace: monitoring
   files:
-  - tenants.yaml=observatorum/tenants.yaml
+  - tenants.yaml=observatorium/tenants.yaml
   - rbac.yaml=observatorium/rbac.yaml
 resources:
-- prom-pod.yaml
-- metricgen-svc.yaml
-- metricgen.yaml
-- obs-svc.yaml
-- obs-route.yaml
-- obs-pod.yaml
+- base/namespace.yaml
+- prometheus/prom-pod.yaml
+- metricgen/metricgen-svc.yaml
+- metricgen/metricgen.yaml
+- observatorium/obs-svc.yaml
+- observatorium/obs-route.yaml
+- observatorium/obs-pod.yaml
 generatorOptions:
   disableNameSuffixHash: true
