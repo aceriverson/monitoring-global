@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: observatorium-svc
+spec:
+  selector:
+    name: observatorium
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -7,7 +7,7 @@ scrape_configs:
       - targets: ["metricgen-svc.monitoring.svc.cluster.local:2112"]
 
 remote_write:
-  - url: "https://observatorium-observatorium.apps.mmikhail-obs2.kni.syseng.devcluster.openshift.com/api/metrics/v1/test/api/v1/receive"
+  - url: "http://observatorium-monitoring.apps.mmikhail-obs2.kni.syseng.devcluster.openshift.com/api/metrics/v1/test/api/v1/receive"
     tls_config:
       ca_file: /etc/prometheus/certs/rootCA.pem
       cert_file: /etc/prometheus/certs/client.pem

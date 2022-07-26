@@ -1,0 +1,32 @@
+# Create a kustomization.yaml file with ConfigMapGenerator
+configMapGenerator:
+- name: prom-mtls
+  namespace: monitoring
+  files:
+  - rootCA.pem=certs/rootCA.generated.crt
+  - client.pem=certs/client-tls.generated.crt
+  - client.key=certs/client-tls.generated.key
+- name: prom-config
+  namespace: monitoring
+  files:
+  - prometheus.yaml=prometheus/prometheus.yaml
+- name: obs-certs
+  namespace: monitoring
+  files:
+  - ca.pem=certs/rootCA.generated.crt
+  - tls.pem=certs/tls.generated.crt
+  - tls.key=certs/tls.generated.key
+- name: tenants
+  namespace: monitoring
+  files:
+  - tenants.yaml=observatorum/tenants.yaml
+  - rbac.yaml=observatorium/rbac.yaml
+resources:
+- prom-pod.yaml
+- metricgen-svc.yaml
+- metricgen.yaml
+- obs-svc.yaml
+- obs-route.yaml
+- obs-pod.yaml
+generatorOptions:
+  disableNameSuffixHash: true

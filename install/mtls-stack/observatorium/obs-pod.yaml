@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: observatorium
+  labels:
+    name: observatorium
+spec:
+  containers:
+  - name: observatorium
+    args:
+    - --metrics.read.endpoint=obs-svc.monitoring.svc.cluster.local
+    - --metrics.write.endpoint=obs-svc.monitoring.svc.cluster.local
+    - --tenants.config=/etc/observatorium/tenants.yaml
+    - --rbac.config=/etc/observatorium/rbac.yaml
+    - --tls.server.cert-file=/var/run/mtls/tls.pem
+    - --tls.server.key-file=/var/run/mtls/tls.key
+    image: quay.io/observatorium/observatorium
+    ports:
+    - containerPort: 3000
+    volumeMounts:
+    - name: tenants
+      mountPath: /etc/observatorium
+    - name: obs-certs
+      mountPath: /var/run/mtls
+  volumes:
+  - name: tenants
+    configMap:
+      name: tenants
+  - name: obs-certs
+    configMap:
+      name: obs-certs
