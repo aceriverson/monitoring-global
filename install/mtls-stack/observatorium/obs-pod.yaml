@@ -8,8 +8,8 @@ spec:
   containers:
   - name: observatorium
     args:
-    - --metrics.read.endpoint=obs-svc.monitoring.svc.cluster.local
-    - --metrics.write.endpoint=obs-svc.monitoring.svc.cluster.local
+    - --metrics.read.endpoint=http://prometheus-monitoring.apps.mmikhail-obs2.kni.syseng.devcluster.openshift.com/
+    - --metrics.write.endpoint=http://prometheus-monitoring.apps.mmikhail-obs2.kni.syseng.devcluster.openshift.com/
     - --tenants.config=/etc/observatorium/tenants.yaml
     - --rbac.config=/etc/observatorium/rbac.yaml
     - --tls.server.cert-file=/var/run/mtls/tls.pem

@@ -24,6 +24,8 @@ configMapGenerator:
 resources:
 - base/namespace.yaml
 - prometheus/prom-pod.yaml
+- prometheus/prom-svc.yaml
+- prometheus/prom-route.yaml
 - metricgen/metricgen-svc.yaml
 - metricgen/metricgen.yaml
 - observatorium/obs-svc.yaml
