@@ -8,5 +8,4 @@ install/observatorium/config/*/**/*.generated.key
 install/observatorium/config/*/**/*.generated.conf
 install/observatorium/config/*/**/*.generated.srl
 install/observatorium/config/certs/rootCA.srl
-install/mtls-stack/certs/*.generated.crt
-install/mtls-stack/certs/*.generated.key
+install/mtls-stack/certs/*.generated.*
