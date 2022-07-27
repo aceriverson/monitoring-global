@@ -14,8 +14,8 @@ configMapGenerator:
   namespace: monitoring
   files:
   - ca.pem=certs/rootCA.generated.crt
-  - tls.pem=certs/tls.generated.crt
-  - tls.key=certs/tls.generated.key
+  - tls.pem=certs/server-tls.generated.crt
+  - tls.key=certs/server-tls.generated.key
 - name: tenants
   namespace: monitoring
   files:
