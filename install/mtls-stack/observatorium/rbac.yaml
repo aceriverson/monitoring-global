@@ -1,18 +1,17 @@
-rbac:
-  roleBindings:
-  - name: test
-    roles:
-    - read-write
-    subjects:
-    - kind: user
-      name: admin@example.com
-  roles:
-  - name: read-write
-    permissions:
-    - read
-    - write
-    resources:
-    - logs
-    - metrics
-    tenants:
-    - test
+"roleBindings":
+- "name": "test"
+  "roles":
+  - "read-write"
+  "subjects":
+  - "kind": "user"
+    "name": "admin@example.com"
+"roles":
+- "name": "read-write"
+  "permissions":
+  - "read"
+  - "write"
+  "resources":
+  - "logs"
+  - "metrics"
+  "tenants":
+  - "test"

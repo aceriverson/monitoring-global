@@ -8,15 +8,24 @@ spec:
   containers:
   - name: observatorium
     args:
-    - --metrics.read.endpoint=http://prometheus-monitoring.apps.mmikhail-obs2.kni.syseng.devcluster.openshift.com/
-    - --metrics.write.endpoint=http://prometheus-monitoring.apps.mmikhail-obs2.kni.syseng.devcluster.openshift.com/
+    - --log.level=debug
+    - --web.listen=0.0.0.0:8080
+    - --web.internal.listen=0.0.0.0:8081
+    - --metrics.read.endpoint=https://prometheus-svc.monitoring.svc.cluster.local
+    - --metrics.write.endpoint=https://prometheus-svc.monitoring.svc.cluster.local
+    - --metrics.tls.ca-file=/var/run/mtls/ca.pem
     - --tenants.config=/etc/observatorium/tenants.yaml
     - --rbac.config=/etc/observatorium/rbac.yaml
     - --tls.server.cert-file=/var/run/mtls/tls.pem
     - --tls.server.key-file=/var/run/mtls/tls.key
-    image: quay.io/observatorium/observatorium
+    - --tls.internal.server.cert-file=/var/run/mtls/tls.pem
+    - --tls.internal.server.key-file=/var/run/mtls/tls.key
+    image: quay.io/observatorium/api
     ports:
-    - containerPort: 3000
+    - containerPort: 8081
+      name: internal
+    - containerPort: 8080
+      name: public
     volumeMounts:
     - name: tenants
       mountPath: /etc/observatorium
