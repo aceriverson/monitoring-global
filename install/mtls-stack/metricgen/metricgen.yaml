@@ -1,20 +1,12 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: metricgen
+  labels:
+    name: metricgen
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      name: metricgen
-  template:
-    metadata:
-      labels:
-        name: metricgen
-    spec:
-      containers:
-      - name: application
-        image: quay.io/rh_ee_aiverson/metricgen
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 2112
+  containers:
+  - name: metricgen
+    image: quay.io/rh_ee_aiverson/metricgen:latest
+    ports:
+    - containerPort: 2112
