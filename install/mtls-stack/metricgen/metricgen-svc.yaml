@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: metricgen-svc
+  name: metricgen
 spec:
   selector:
     name: metricgen

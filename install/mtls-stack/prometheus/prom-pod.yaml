@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: prometheus-mtls
+  name: prometheus
   labels:
     name: prometheus
 spec:
   containers:
-  - name: prometheus-mtls
+  - name: prometheus
     args:
       - --config.file=/etc/prometheus/prometheus.yaml
     image: quay.io/prometheus/prometheus
     ports:
-    - containerPort: 80
+    - containerPort: 8080
     volumeMounts:
     - name: prom-mtls
       mountPath: /etc/prometheus/certs

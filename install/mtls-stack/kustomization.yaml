@@ -3,33 +3,33 @@ configMapGenerator:
 - name: prom-mtls
   namespace: monitoring
   files:
-  - rootCA.pem=certs/rootCA.generated.crt
-  - client.pem=certs/client-tls.generated.crt
-  - client.key=certs/client-tls.generated.key
+  - rootCA.pem=config/certs/rootCA.generated.crt
+  - client.pem=config/certs/client-tls.generated.crt
+  - client.key=config/certs/client-tls.generated.key
 - name: prom-config
   namespace: monitoring
   files:
-  - prometheus.yaml=prometheus/prometheus.yaml
+  - prometheus.yaml=config/prometheus.yaml
 - name: obs-certs
   namespace: monitoring
   files:
-  - ca.pem=certs/rootCA.generated.crt
-  - tls.pem=certs/server-tls.generated.crt
-  - tls.key=certs/server-tls.generated.key
+  - ca.pem=config/certs/rootCA.generated.crt
+  - tls.pem=config/certs/server-tls.generated.crt
+  - tls.key=config/certs/server-tls.generated.key
 - name: tenants
   namespace: monitoring
   files:
-  - tenants.yaml=observatorium/tenants.yaml
-  - rbac.yaml=observatorium/rbac.yaml
+  - tenants.yaml=config/tenants.yaml
+  - rbac.yaml=config/rbac.yaml
+- name: thanos-store
+  namespace: monitoring
+  files:
+  - bucket.yaml=config/bucket.yaml
+- name: grafana-source
+  namespace: monitoring
+  files:
+  - datasource.yaml=config/datasource.generated.yaml
 resources:
-- base/namespace.yaml
-- prometheus/prom-pod.yaml
-- prometheus/prom-svc.yaml
-- prometheus/prom-route.yaml
-- metricgen/metricgen-svc.yaml
-- metricgen/metricgen.yaml
-- observatorium/obs-svc.yaml
-- observatorium/obs-route.yaml
-- observatorium/obs-pod.yaml
+- namespace/namespace.yaml
 generatorOptions:
   disableNameSuffixHash: true

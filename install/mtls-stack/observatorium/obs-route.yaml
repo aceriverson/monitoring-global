@@ -5,9 +5,9 @@ metadata:
 spec:
   to:
     kind: Service
-    name: observatorium-svc
+    name: observatorium
   port:
-    targetPort: 8080
+    targetPort: public
   tls:
     termination: passthrough
     insecureEdgeTerminationPolicy: Redirect
