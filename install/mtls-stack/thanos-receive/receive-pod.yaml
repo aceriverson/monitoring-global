@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: thanos-receive
+  labels:
+    name: thanos-receive
+spec:
+  containers:
+  - name: thanos-receive
+    args:
+        - receive
+        - --log.level=debug
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        - --remote-write.address=0.0.0.0:19291
+        - --receive.replication-factor=1
+        - --tsdb.path=/var/thanos/receive
+        - --tsdb.retention=4d
+        - --label=receive="true"
+        - --objstore.config-file=/etc/thanos/store/bucket.yaml
+    image: quay.io/thanos/thanos:main-2022-07-27-fd275f8a
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: thanos-store
+      mountPath: /etc/thanos/store
+  volumes:
+    - name: thanos-store
+      configMap:
+        name: thanos-store

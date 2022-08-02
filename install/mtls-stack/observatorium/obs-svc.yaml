@@ -1,11 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: observatorium-svc
+  name: observatorium
 spec:
   selector:
     name: observatorium
   ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
+  - name: internal
+    protocol: TCP
+    port: 8081
+    targetPort: 8081
+  - name: public
+    protocol: TCP
+    port: 8080
+    targetPort: 8080

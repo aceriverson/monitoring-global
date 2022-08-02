@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: thanos-store
+  labels:
+    name: thanos-store
+spec:
+  containers:
+  - name: thanos-store
+    args:
+    - store
+    - --data-dir=/var/thanos/store
+    - --objstore.config-file=/etc/thanos/store/bucket.yaml
+    - --log.level=debug
+    image: quay.io/thanos/thanos:v0.22.0
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: thanos-store
+      mountPath: /etc/thanos/store
+  volumes:
+    - name: thanos-store
+      configMap:
+        name: thanos-store

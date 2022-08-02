@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: minio
+  labels:
+    name: minio
+spec:
+  containers:
+  - name: minio
+    command:
+    - /bin/sh
+    - '-c'
+    - |
+      mkdir -p /storage/thanos && \
+      /opt/bin/minio server /storage
+    args:
+    - server
+    - /storage
+    image: quay.io/minio/minio
+    ports:
+    - containerPort: 9000
