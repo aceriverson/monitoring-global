@@ -11,11 +11,11 @@ openssl genrsa -out config/certs/server-tls.generated.key 2048
 openssl genrsa -out config/certs/client-tls.generated.key 2048
 openssl genrsa -out config/certs/grafana-tls.generated.key 2048
 openssl req -new -key rsa:2048 -key config/certs/server-tls.generated.key -out config/certs/server-tls.generated.csr -config config/certs/server_cert.conf
-openssl req -new -key rsa:2048 -key config/certs/client-tls.generated.key -out config/certs/client-tls.generated.csr -config config/certs/client_cert.conf -reqexts 'v3_req'
-openssl req -new -key rsa:2048 -key config/certs/grafana-tls.generated.key -out config/certs/grafana-tls.generated.csr -config config/certs/client_cert.conf -reqexts 'v3_req'
+openssl req -new -key rsa:2048 -key config/certs/client-tls.generated.key -out config/certs/client-tls.generated.csr -config config/certs/write_cert.conf -reqexts 'v3_req'
+openssl req -new -key rsa:2048 -key config/certs/grafana-tls.generated.key -out config/certs/grafana-tls.generated.csr -config config/certs/read_cert.conf -reqexts 'v3_req'
 openssl x509 -req -in config/certs/server-tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -set_serial 01 -CAserial config/certs/rootCA.generated.srl -out config/certs/server-tls.generated.crt -days 730 -sha256 -extfile config/certs/server_cert.conf -extensions v3_req
-openssl x509 -req -in config/certs/client-tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -set_serial 02 -CAserial config/certs/rootCA.generated.srl -out config/certs/client-tls.generated.crt -days 730 -sha256 -extfile config/certs/client_cert.conf -extensions v3_req
-openssl x509 -req -in config/certs/grafana-tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -set_serial 03 -CAserial config/certs/rootCA.generated.srl -out config/certs/grafana-tls.generated.crt -days 730 -sha256 -extfile config/certs/client_cert.conf -extensions v3_req
+openssl x509 -req -in config/certs/client-tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -set_serial 02 -CAserial config/certs/rootCA.generated.srl -out config/certs/client-tls.generated.crt -days 730 -sha256 -extfile config/certs/write_cert.conf -extensions v3_req
+openssl x509 -req -in config/certs/grafana-tls.generated.csr  -CA config/certs/rootCA.generated.crt -CAkey config/certs/rootCA.generated.key -set_serial 03 -CAserial config/certs/rootCA.generated.srl -out config/certs/grafana-tls.generated.crt -days 730 -sha256 -extfile config/certs/read_cert.conf -extensions v3_req
 
 CA=$(sed 's/^/        /g' config/certs/rootCA.generated.crt)
 GRAFANA_CERT=$(sed 's/^/        /g' config/certs/grafana-tls.generated.crt)
@@ -45,9 +45,9 @@ datasources:
     # <string> json object of data that will be encrypted.
     secureJsonData:
       tlsCACert: |2
-"$CA"
+""$CA""
       tlsClientCert: |2
-"$GRAFANA_CERT"
+""$GRAFANA_CERT""
       tlsClientKey: |2
-"$GRAFANA_KEY"
+""$GRAFANA_KEY""
     version: 1" > config/datasource.generated.yaml

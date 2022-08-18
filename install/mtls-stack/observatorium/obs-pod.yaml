@@ -13,7 +13,6 @@ spec:
     - --web.internal.listen=0.0.0.0:8081
     - --metrics.read.endpoint=http://thanos-query.monitoring.svc.cluster.local:9090
     - --metrics.write.endpoint=http://thanos-receive.monitoring.svc.cluster.local:19291
-    - --metrics.tls.ca-file=/var/run/mtls/ca.pem
     - --tenants.config=/etc/observatorium/tenants.yaml
     - --rbac.config=/etc/observatorium/rbac.yaml
     - --tls.server.cert-file=/var/run/mtls/tls.pem

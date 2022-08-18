@@ -1,14 +1,28 @@
 "roleBindings":
-- "name": "test"
+- "name": "test-read"
   "roles":
-  - "read-write"
+  - "read"
   "subjects":
   - "kind": "user"
-    "name": "admin@example.com"
+    "name": "read.monitoring.test"
+- "name": "test-write"
+  "roles":
+  - "write"
+  "subjects":
+  - "kind": "user"
+    "name": "write.monitoring.test"
+
 "roles":
-- "name": "read-write"
+- "name": "read"
   "permissions":
   - "read"
+  "resources":
+  - "logs"
+  - "metrics"
+  "tenants":
+  - "test"
+- "name": "write"
+  "permissions":
   - "write"
   "resources":
   - "logs"
